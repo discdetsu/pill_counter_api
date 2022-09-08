@@ -6,6 +6,7 @@ orjson==3.8.0
 python-multipart==0.0.5
 uvicorn==0.18.3
 gunicorn
+fastapi
 # Base ----------------------------------------
 matplotlib>=3.2.2
 numpy>=1.18.5
