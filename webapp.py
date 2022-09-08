@@ -27,7 +27,7 @@ def root():
 
 favicon_path = 'favicon.ico'
 
-@app.get('favicon.ico')
+@app.get('/favicon.ico')
 async def favicon():
     return FileResponse(favicon_path)
 # @app.post("/plot/", responses = {
