@@ -7,7 +7,7 @@ from fastapi.responses import ORJSONResponse,FileResponse
 import warnings
 warnings.filterwarnings("ignore")
 
-model = torch.hub.load("yolov7", 'custom', "PillDetectorYOLOv7.pt", source='local', force_reload=True)
+model = torch.hub.load("yolov7_local", 'custom', "PillDetectorYOLOv7.pt", source='local', force_reload=True)
 # results = model('1.jpg', size=640)
 # results = results.pandas().xyxy[0].values.tolist()
 
