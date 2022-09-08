@@ -1,8 +1,8 @@
-from fastapi import FastAPI, File
+from fastapi import FastAPI,File
 import torch
 from PIL import Image
 import io
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import ORJSONResponse,FileResponse
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -25,6 +25,11 @@ app = FastAPI()
 def root():
     return "It's work!" 
 
+favicon_path = 'favicon.ico'
+
+@app.get('favicon.ico')
+async def favicon():
+    return FileResponse(favicon_path)
 # @app.post("/plot/", responses = {
 #         200: {
 #             "content": {"image/jpg": {}}
