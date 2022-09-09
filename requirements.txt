@@ -1,27 +1,28 @@
--f https://download.pytorch.org/whl/torch_stable.html
-torch==1.11.0+cpu
-torchvision==0.12.0+cpu
-
+anyio==3.6.1
+click==8.1.3
+colorama==0.4.5
+coloredlogs==15.0.1
+fastapi==0.82.0
+flatbuffers==2.0.7
+gunicorn==20.1.0
+h11==0.13.0
+humanfriendly==10.0
+idna==3.3
+mpmath==1.2.1
+numpy==1.23.2
+onnxruntime==1.12.1
+opencv-python-headless==4.6.0.66
 orjson==3.8.0
+packaging==21.3
+Pillow==9.2.0
+protobuf==4.21.5
+pydantic==1.10.2
+pyparsing==3.0.9
+pyreadline3==3.4.1
 python-multipart==0.0.5
+six==1.16.0
+sniffio==1.3.0
+starlette==0.19.1
+sympy==1.11.1
+typing_extensions==4.3.0
 uvicorn==0.18.3
-gunicorn
-fastapi
-# Base ----------------------------------------
-matplotlib>=3.2.2
-numpy>=1.18.5
-opencv-python
-Pillow>=7.1.2
-PyYAML>=5.3.1
-requests>=2.23.0
-scipy>=1.4.1
-tqdm>=4.41.0
-protobuf<4.21.3
-# Plotting ------------------------------------
-pandas>=1.1.4
-seaborn
-
-# Extras --------------------------------------
-ipython  # interactive notebook
-psutil  # system utilization
-thop  # FLOPs computation
