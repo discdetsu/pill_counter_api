@@ -13,6 +13,13 @@ model.eval()
 
 app = Flask(__name__)
 
+@app.route('/', methods=["GET"])
+def home():
+    return 'Its work!'
+
+@app.route('/favicon.ico', methods=["GET"])
+def icon():
+    return 'Found icon'
 
 @app.route('/predict', methods=["POST"])
 def predict():
