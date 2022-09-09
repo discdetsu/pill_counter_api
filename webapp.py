@@ -1,6 +1,3 @@
-from fastapi import FastAPI,File
-from fastapi.responses import ORJSONResponse,FileResponse
-
 from PIL import Image
 import io
 
@@ -8,6 +5,8 @@ import cv2
 import numpy as np
 import onnxruntime as ort
 from PIL import Image
+
+from flask import Flask,request
 
 
 model = "PillDetectorYOLOv7.onnx"
@@ -43,44 +42,42 @@ def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleu
     return im, r, (dw, dh)
 
 
+app = Flask(__name__)
 
-app = FastAPI()
 
-@app.get("/")
-def root():
-    return "It's work!" 
+@app.route('/predict', methods=["POST"])
+def predict():
+    if not request.method == "POST":
+        return
 
-favicon_path = 'favicon.ico'
+    if request.files:
+        img = Image.open(request.files['file'].stream)
+        width, height = img.size
+        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        image = img.copy()
+        image, ratio, dwdh = letterbox(image, auto=False)
+        image = image.transpose((2, 0, 1))
+        image = np.expand_dims(image, 0)
+        image = np.ascontiguousarray(image)
+        im = image.astype(np.float32)
+        im /= 255
+        outname = [i.name for i in session.get_outputs()]
+        inname = [i.name for i in session.get_inputs()]
+        inp = {inname[0]:im}
 
-@app.get('/favicon.ico')
-async def favicon():
-    return FileResponse(favicon_path)
+        outputs = session.run(outname, inp)[0]
+        bboxes = []
+        for i,(_,x0,y0,x1,y1,_,_) in enumerate(outputs):
 
-@app.post("/image/", response_class=ORJSONResponse)
-async def read_items(file: bytes = File()):
-    img = Image.open(io.BytesIO(file))
-    width, height = img.size
-    img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-    image = img.copy()
-    image, ratio, dwdh = letterbox(image, auto=False)
-    image = image.transpose((2, 0, 1))
-    image = np.expand_dims(image, 0)
-    image = np.ascontiguousarray(image)
-    im = image.astype(np.float32)
-    im /= 255
-    outname = [i.name for i in session.get_outputs()]
-    inname = [i.name for i in session.get_inputs()]
-    inp = {inname[0]:im}
+            box = np.array([x0,y0,x1,y1])
+            box -= np.array(dwdh*2)
+            box /= ratio
+            box = box.round().astype(np.int32).tolist()
+            bboxes.append(box)
+        res = {'width': width, 'height': height, 'pill_counts': len(outputs),'annotations': bboxes}
+        return res
+    else:
+        'Error with uploading image!'
 
-    outputs = session.run(outname, inp)[0]
-    bboxes = []
-    for i,(_,x0,y0,x1,y1,_,_) in enumerate(outputs):
-
-        box = np.array([x0,y0,x1,y1])
-        box -= np.array(dwdh*2)
-        box /= ratio
-        box = box.round().astype(np.int32).tolist()
-        bboxes.append(box)
-    res = {'width': width, 'height': height, 'pill_counts': len(outputs),'annotations': bboxes}
-
-    return ORJSONResponse(res)
+if __name__ == "__main__":
+    app.run() 
