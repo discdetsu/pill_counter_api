@@ -1,25 +1,13 @@
 from PIL import Image
-import io
 import torch
-import cv2
-import numpy as np
-from PIL import Image
 
 from flask import Flask,request
 
 model = torch.hub.load("yolov7-main", 'custom', "PillDetectorYOLOv7.pt", source='local', force_reload=True)
 
-model.eval()
 
 app = Flask(__name__)
 
-@app.route('/', methods=["GET"])
-def home():
-    return 'Its work!'
-
-@app.route('/favicon.ico', methods=["GET"])
-def icon():
-    return 'Found icon'
 
 @app.route('/predict', methods=["POST"])
 def predict():
