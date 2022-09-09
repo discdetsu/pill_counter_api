@@ -11,8 +11,7 @@ from PIL import Image
 
 
 model = "PillDetectorYOLOv7.onnx"
-providers = ['CPUExecutionProvider'] # CPU only
-session = ort.InferenceSession(model, providers=providers)
+session = ort.InferenceSession(model)
 
 # From yolov7 repo
 def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleup=True, stride=32):
